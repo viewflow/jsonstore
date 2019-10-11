@@ -8,7 +8,7 @@ html
 dist
 json_store.egg-info
 MANIFEST
-db*.sqlite3
+dj*.sqlite3
 node_modules/
 docs/_build/**
 npm-debug.log

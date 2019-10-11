@@ -1,5 +1,6 @@
 from django.db import models
-from json_store.fields import JSONField
+from jsonfield_schema import JSONField
+from . import schemas
 
 
 class Order(models.Model):
@@ -7,17 +8,16 @@ class Order(models.Model):
 
 
 class Person(models.Model):
-    class Schema:
-        name = {
-            "type": "string",
-        }
-        address = {
-            "type": "string"
-        }
+    _schema = schemas.Person()
+    data = JSONField()
 
 
-class Client(models.Model):
-    class Schema(Person.Schema):
-        business_phone = {
-            "type": "string"
-        }
+class Client(Person):
+    _schema = schemas.Client()
+
+
+class VIPClient(Client):
+    _schema = schemas.VIPClient()
+
+    class Meta:
+        proxy = True

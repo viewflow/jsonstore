@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSONField Schema Sample</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css">
+  </head>
+  <body style="display:flex">
+    <form class="pure-form-stacked" method="POST" style="margin:auto">
+      {% csrf_token %}
+      <fieldset>
+        <legend>A Person</legend>
+        {{ form }}
+        <button type="submit" class="pure-button pure-button-primary">Create</button>
+      </fielset>
+    </form>
+  </body>
+</html>
