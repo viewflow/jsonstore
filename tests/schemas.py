@@ -23,17 +23,21 @@ class Client(Person):
     }
 
     class Meta(Person.Meta):
-        populate = Person.Meta.populate + [
+        populate = [
             'business_phone'
         ]
 
 
-class VIPClient(Person):
+class VIPClient(Client):
+    approved = {
+        "type": "boolean"
+    }
     personal_phone = {
         "type": "string"
     }
 
     class Meta(Person.Meta):
-        populate = Person.Meta.populate + [
-            'personal_phone'
+        populate = [
+            'approved', 'personal_phone'
         ]
+        required = ['approved']

@@ -7,7 +7,7 @@ from . import models
 
 class PersonForm(forms.ModelForm):
     class Meta:
-        model = models.Person
+        model = models.VIPClient
         exclude = ['data']
 
 
