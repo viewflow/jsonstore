@@ -116,7 +116,7 @@ class JSONSchema(with_metaclass(JSONSchemaMetaClass, object)):  # NOQA
             multiple_of = field_def.get('multipleOf', None)
 
             if minimum:
-                validators.append(MaxValueValidator(maximum))
+                validators.append(MinValueValidator(maximum))
             if maximum:
                 validators.append(MaxValueValidator(maximum))
 
@@ -149,11 +149,13 @@ class JSONFieldDescriptor(object):
             return self
         json_value = getattr(instance, self.json_field_name)
         if isinstance(json_value, dict):
+            # todo from json
             return json_value.get(self.field_name, None)
         return None
 
     def __set__(self, instance, value):
         json_value = getattr(instance, self.json_field_name)
+        # todo value = to_json
         if json_value:
             assert isinstance(json_value, dict)
             json_value[self.field_name] = value

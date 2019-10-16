@@ -18,13 +18,17 @@ class Person(JSONSchema):
 
 
 class Client(Person):
+    birthdate = {
+        "type": "string",
+        "format": "date",
+    }
     business_phone = {
         "type": "string"
     }
 
     class Meta(Person.Meta):
         populate = [
-            'business_phone'
+            'birthdate', 'business_phone'
         ]
 
 
