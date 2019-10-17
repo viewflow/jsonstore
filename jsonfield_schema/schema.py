@@ -3,6 +3,7 @@ import math
 from functools import partialmethod
 from six import with_metaclass
 
+from django.core.exceptions import FieldError
 from django.core.validators import (
     MaxValueValidator, MinValueValidator, MinLengthValidator,
     RegexValidator
@@ -48,6 +49,9 @@ class JSONSchema(with_metaclass(JSONSchemaMetaClass, object)):  # NOQA
     attname = None
     column = None
 
+    def __init__(self, json_field_name='data'):
+        self.json_field_name = json_field_name
+
     class Meta:
         pass
 
@@ -86,30 +90,53 @@ class JSONSchema(with_metaclass(JSONSchemaMetaClass, object)):  # NOQA
             if max_length is None:
                 return TextField(
                     blank=not required,
-                    validators=validators
+                    validators=validators,
+                    json_field_name=self.json_field_name,
                 )
             else:
                 return CharField(
                     max_length=max_length,
                     blank=not required,
-                    validators=validators
+                    validators=validators,
+                    json_field_name=self.json_field_name,
                 )
         elif field_type == 'string' and field_format == 'date':
-            return DateField(blank=not required)
+            return DateField(
+                blank=not required,
+                json_field_name=self.json_field_name,
+            )
         elif field_type == 'string' and field_format == 'time':
-            return TimeField(blank=not required)
+            return TimeField(
+                blank=not required,
+                json_field_name=self.json_field_name,
+            )
         elif field_type == 'string' and field_format == 'date-time':
-            return DateTimeField(blank=not required)
+            return DateTimeField(
+                blank=not required,
+                json_field_name=self.json_field_name,
+            )
         elif field_type == 'string' and field_format == 'email':
-            return EmailField(blank=not required)
+            return EmailField(
+                blank=not required,
+                json_field_name=self.json_field_name,
+            )
         elif field_type == 'string' and field_format == 'ipv4':
-            return IPAddressField(blank=not required)
+            return IPAddressField(
+                blank=not required,
+                json_field_name=self.json_field_name,
+            )
         elif field_type == 'string' and field_format == 'ipv6':
-            return GenericIPAddressField(blank=not required)
+            return GenericIPAddressField(
+                blank=not required,
+                json_field_name=self.json_field_name,
+            )
         elif field_type == 'string' and field_format == 'uri':
-            return URLField(blank=not required)
+            return URLField(
+                blank=not required,
+                json_field_name=self.json_field_name,
+            )
         elif field_type == 'integer':
-            return IntegerField()
+            return IntegerField(json_field_name=self.json_field_name)
         elif field_type == 'number':
             maximum = field_def.get('maximum', None)
             minimum = field_def.get('minimum', None)
@@ -126,15 +153,16 @@ class JSONSchema(with_metaclass(JSONSchemaMetaClass, object)):  # NOQA
 
                 return DecimalField(
                     max_digits=max_digits,
-                    decimal_places=decimal_places
+                    decimal_places=decimal_places,
+                    json_field_name=self.json_field_name,
                 )
             else:
-                return FloatField()
+                return FloatField(json_field_name=self.json_field_name)
         elif field_type == 'boolean':
             if required:
-                return BooleanField()
+                return BooleanField(json_field_name=self.json_field_name)
             else:
-                return NullBooleanField()
+                return NullBooleanField(json_field_name=self.json_field_name)
 
         return None
 
@@ -169,21 +197,50 @@ class JSONFieldMixin(object):
     Override django.db.model.fields.Field.contribute_to_class
     to make a field always private, and register custom access descriptor
     """
+    def __init__(self, *args, **kwargs):
+        self.json_field_name = kwargs.pop('json_field_name', 'data')
+        super().__init__(*args, **kwargs)
 
     def contribute_to_class(self, cls, name, private_only=False):
-        print(cls, name)
         self.set_attributes_from_name(name)
         self.model = cls
         self.concrete = False
-        self.column = None
+        self.column = 'data'
         cls._meta.add_field(self, private=True)
 
         if not getattr(cls, self.attname, None):
-            setattr(cls, self.attname, JSONFieldDescriptor(self.attname))
+            descriptor = JSONFieldDescriptor(self.attname, self.json_field_name)
+            setattr(cls, self.attname, descriptor)
 
         if self.choices is not None:
             setattr(cls, 'get_%s_display' % self.name,
                     partialmethod(cls._get_FIELD_display, field=self))
+
+    def get_lookup(self, lookup_name):
+        # Always return None, to make get_transform been called
+        return None
+
+    def get_transform(self, name):
+        class TransformFactoryWrapper:
+            def __init__(self, json_field, transform):
+                self.json_field = json_field
+                self.transform = transform
+
+            def __call__(self, lhs, **kwargs):
+                lhs.target = self.json_field
+                lhs.output_field = self.json_field
+                transform = self.transform(lhs, **kwargs)
+                return transform
+
+        json_field = self.model._meta.get_field(self.json_field_name)
+        transform = json_field.get_transform(self.name)
+        if transform is None:
+            raise FieldError(
+                "JSONField '%s' has no support for key '%s' %s lookup" %
+                (self.json_field_name, self.name, name)
+            )
+
+        return TransformFactoryWrapper(json_field, transform)
 
 
 class BooleanField(JSONFieldMixin, fields.BooleanField):
