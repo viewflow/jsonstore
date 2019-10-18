@@ -1,3 +1,6 @@
+import copy
+import functools
+import inspect
 import math
 
 from functools import partialmethod
@@ -222,14 +225,18 @@ class JSONFieldMixin(object):
 
     def get_transform(self, name):
         class TransformFactoryWrapper:
-            def __init__(self, json_field, transform):
+            def __init__(self, json_field, transform, original_lookup):
                 self.json_field = json_field
                 self.transform = transform
+                self.original_lookup = original_lookup
 
             def __call__(self, lhs, **kwargs):
+                lhs = copy.copy(lhs)
                 lhs.target = self.json_field
                 lhs.output_field = self.json_field
                 transform = self.transform(lhs, **kwargs)
+                transform._original_get_lookup = transform.get_lookup
+                transform.get_lookup = lambda name: transform._original_get_lookup(self.original_lookup)
                 return transform
 
         json_field = self.model._meta.get_field(self.json_field_name)
@@ -240,7 +247,7 @@ class JSONFieldMixin(object):
                 (self.json_field_name, self.name, name)
             )
 
-        return TransformFactoryWrapper(json_field, transform)
+        return TransformFactoryWrapper(json_field, transform, name)
 
 
 class BooleanField(JSONFieldMixin, fields.BooleanField):
