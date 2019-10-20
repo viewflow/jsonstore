@@ -1,6 +1,4 @@
 import copy
-import functools
-import inspect
 import math
 
 from functools import partialmethod
@@ -208,7 +206,7 @@ class JSONFieldMixin(object):
         self.set_attributes_from_name(name)
         self.model = cls
         self.concrete = False
-        self.column = 'data'
+        self.column = self.json_field_name
         cls._meta.add_field(self, private=True)
 
         if not getattr(cls, self.attname, None):

@@ -17,10 +17,6 @@ class Test(TestCase):
         person = Person.objects.get(name='John Doe')
         self.assertEqual(person.name, 'John Doe')
 
-    def test_contains_query(self):
-        person = Person.objects.get(name__icontains='John')
-        self.assertEqual(person.name, 'John Doe')
-
     def test_isnull_query(self):
         persons = Person.objects.filter(name__isnull=True)
         self.assertEqual(0, persons.count())

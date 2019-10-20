@@ -75,7 +75,7 @@ MIGRATION_MODULES = {
     'sessions': None,
     'messages': None,
     'staticfiles': None,
-    'tests': None,
+    # 'tests': None,
 }
 
 
