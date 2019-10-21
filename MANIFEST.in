@@ -1,0 +1,4 @@
+include LICENSE
+include LICENSE_EXCEPTION
+include MANIFEST.in
+include README.rst

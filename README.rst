@@ -7,6 +7,16 @@ Expose JSONField data as a virtual django model fields.
 Use ModelForm and ModelAdmin as usual. Perform simple queries. Migrate to real
 table columns when needed without code change.
 
+Suitable to store dumb business data, quick prototypes without DB migrations,
+and replace multi-table inheritance joins.
+
+*Use with caution! Replacing relational structures with JSON data should be
+mindfull architecture decision.*
+
+Works with any JSONField `django.contrib.postgres <https://docs.djangoproject.com/en/2.2/ref/contrib/postgres/fields/#jsonfield>`_,
+`django-annoying <https://github.com/skorokithakis/django-annoying#jsonfield>`_,
+`django-mysql <https://django-mysql.readthedocs.io/en/latest/model_fields/json_field.html>`_,
+upcoming django `Cross-db JSONField <https://github.com/django/django/pull/11452>`_
 
 *Work in progress* part of https://json-schema.org definitions are only supported.
 
@@ -53,9 +63,25 @@ Quick start
 Demo
 ====
 
+The demo shows how to handle multiple User types within single table with
+JSONField and `Django-Polymodels <https://github.com/charettes/django-polymodels/>`_ proxies.
+
 .. code:: bash
 
    $ export DATABASE_URL=postgresql://viewflow:viewflow@localhost/viewflow
    $ export DJANGO_SETTINGS_MODULE=demo.settings
    $ tox python manage.py migrate
    $ tox python manage.py runserver
+
+
+License
+=======
+
+
+Latest changelog
+================
+
+0.1.0 2019-10-21
+----------------
+
+* Initial Release
