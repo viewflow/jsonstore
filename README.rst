@@ -10,6 +10,13 @@ table columns when needed without code change.
 Suitable to store dumb business data, quick prototypes without DB migrations,
 and replace multi-table inheritance joins.
 
+.. image:: https://img.shields.io/pypi/v/django-viewflow.svg
+    :target: https://pypi.python.org/pypi/django-viewflow
+
+.. image:: https://img.shields.io/pypi/pyversions/django-viewflow.svg
+    :target: https://pypi.python.org/pypi/django-viewflow
+
+
 *Use with caution! Replacing relational structures with JSON data should be
 mindfull architecture decision.*
 
