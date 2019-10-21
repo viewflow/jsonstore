@@ -14,7 +14,7 @@ setup(
     keywords=['workflow', 'django', 'bpm', 'automaton'],
     url='http://github.com/viewflow/jsonfield-schema',
     classifiers=[
-        'Development Status :: Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Operating System :: OS Independent',
