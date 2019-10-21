@@ -4,7 +4,6 @@ from polymodels.models import PolymorphicModel
 from jsonfield_schema import JSONField
 from . import schemas
 
-
 from polymodels.managers import PolymorphicManager
 from django.contrib.auth.models import UserManager
 

@@ -7,6 +7,7 @@ Expose JSONField data as a virtual django model fields.
 Use ModelForm and ModelAdmin as usual. Perform simple queries. Migrate to real
 table columns when needed without code change.
 
+
 *Work in progress* part of https://json-schema.org definitions are only supported.
 
 Quick start
@@ -47,3 +48,14 @@ Quick start
     class EmployeeAdmin(admin.ModelAdmin):
         list_display = ['full_name', 'hire_date']
         fields = ['full_name', ('hire_date', 'salary')]
+
+
+Demo
+====
+
+.. code:: bash
+
+   $ export DATABASE_URL=postgresql://viewflow:viewflow@localhost/viewflow
+   $ export DJANGO_SETTINGS_MODULE=demo.settings
+   $ tox python manage.py migrate
+   $ tox python manage.py runserver
