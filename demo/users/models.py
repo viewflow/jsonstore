@@ -1,24 +1,17 @@
 from django.contrib.auth.models import AbstractUser
 from jsonfield_schema import JSONField
-from . import managers, schemas
+from . import schemas
 
 
 class User(AbstractUser):
     _schema = schemas.User()
-    data = JSONField()
+    data = JSONField(null=True)
 
-    objects = managers.UserManager()
+    # objects = managers.UserManager()
 
 
 class Employee(User):
     _schema = schemas.Employee()
-
-    class Meta:
-        proxy = True
-
-
-class Manager(Employee):
-    _schema = schemas.Manager()
 
     class Meta:
         proxy = True

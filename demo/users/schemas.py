@@ -3,8 +3,9 @@ from jsonfield_schema import JSONSchema
 
 class User(JSONSchema):
     user_type = {
-        "type": "string"
-        # choices
+        "type": "string",
+        "enum": ["Employee", "Manager", "Client"],
+        "maxLength": 250,
     }
 
     class Meta:
@@ -22,12 +23,14 @@ class Employee(User):
         "multiplyOf": 0.01,
     }
 
-
-class Manager(Employee):
     department = {
         "type": "string",
-        # choices
+        "enum": ["Marketing", "Development", "Sales"],
+        "maxLength": 250,
     }
+
+    class Meta:
+        populate = ['hire_date', 'salary', 'department']
 
 
 class Client(User):
@@ -42,3 +45,6 @@ class Client(User):
     city = {
         "type": "string",
     }
+
+    class Meta:
+        populate = ['address', 'zip_code', 'city']
