@@ -2,12 +2,6 @@ from jsonfield_schema import JSONSchema
 
 
 class User(JSONSchema):
-    user_type = {
-        "type": "string",
-        "enum": ["Employee", "Manager", "Client"],
-        "maxLength": 250,
-    }
-
     class Meta:
         populate = []
 
@@ -40,11 +34,17 @@ class Client(User):
 
     zip_code = {
         "type": "string",
+        "maxLength": 250,
     }
 
     city = {
         "type": "string",
+        "maxLength": 250,
+    }
+
+    vip = {
+        "type": "boolean",
     }
 
     class Meta:
-        populate = ['address', 'zip_code', 'city']
+        populate = ['address', 'zip_code', 'city', 'vip']

@@ -1,19 +1,26 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from . import models
 
 
 @admin.register(models.User)
-class UserAdmin(admin.ModelAdmin):
-    exclude = ['data']
+class UserAdmin(UserAdmin):
+    list_display = UserAdmin.list_display + ('data', )
+    exclude = ['content_type', 'data']
 
 
 @admin.register(models.Employee)
-class EmployeeAdmin(admin.ModelAdmin):
+class EmployeeAdmin(UserAdmin):
     list_display = ['username', 'first_name', 'last_name', 'salary', 'department']
-    exclude = ['data']
+    fieldsets = UserAdmin.fieldsets + (
+        ("Employee data", {'fields': ('hire_date', 'salary', 'department')}),
+    )
 
 
 @admin.register(models.Client)
-class ClientAdmin(admin.ModelAdmin):
-    list_display = ['username', 'first_name', 'last_name', 'city', 'data']
-    exclude = ['data']
+class ClientAdmin(UserAdmin):
+    list_display = ('username', 'first_name', 'last_name', 'city')
+    list_filter = ('vip', )
+    fieldsets = UserAdmin.fieldsets + (
+        ("Client data", {'fields': ('address', 'zip_code', 'city', 'vip')}),
+    )
