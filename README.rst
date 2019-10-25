@@ -10,11 +10,11 @@ table columns when needed without code change.
 Suitable to store dumb business data, quick prototypes without DB migrations,
 and replace multi-table inheritance joins.
 
-.. image:: https://img.shields.io/pypi/v/django-viewflow.svg
-    :target: https://pypi.python.org/pypi/django-viewflow
+.. image:: https://img.shields.io/pypi/v/django-jsonfield-schema.svg
+    :target: https://pypi.python.org/pypi/django-jsonfield-schema
 
-.. image:: https://img.shields.io/pypi/pyversions/django-viewflow.svg
-    :target: https://pypi.python.org/pypi/django-viewflow
+.. image:: https://img.shields.io/pypi/pyversions/django-jsonfield-schema.svg
+    :target: https://pypi.python.org/pypi/django-jsonfield-schema
 
 
 *Use with caution! Replacing relational structures with JSON data should be
@@ -97,7 +97,7 @@ your stack.
 Latest changelog
 ================
 
-0.1.0 2019-10-21
+0.2.0 2019-10-25
 ----------------
 
-* Initial Release
+* Support for Python 2.7 and django 1.11/3.0

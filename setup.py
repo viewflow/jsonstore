@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='django-jsonfield-schema',
-    version='0.1.0',
+    version='0.2.0',
     author='Mikhail Podgurskiy',
     author_email='kmmbvnr@gmail.com',
     description='Expose JSONField data as a virtual django model fields.',

@@ -1,5 +1,6 @@
 from importlib import import_module
 
+import django
 from django.conf import settings
 
 
@@ -31,6 +32,12 @@ def JSONField(*args, **kwargs):
         else:
             return OR_JSONField(*args, **kwargs)
     else:
+        if django.VERSION >= (3, 0):
+            # Quick six for django-annoying
+            import six
+            from django import utils
+            utils.six = six
+
         try:
             from annoying.fields import JSONField as DEFAULT_JSONField
         except ImportError:

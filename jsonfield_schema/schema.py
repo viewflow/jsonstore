@@ -1,7 +1,21 @@
 import copy
 import math
 
-from functools import partialmethod
+try:
+    from functools import partialmethod
+except ImportError:
+    # python 2.7
+    from functools import partial
+
+    class partialmethod(partial):
+        # https://gist.github.com/carymrobbins/8940382
+        def __get__(self, instance, owner):
+            if instance is None:
+                return self
+            return partial(self.func, instance,
+                           *(self.args or ()), **(self.keywords or {}))
+
+
 from six import with_metaclass
 
 from django.core.exceptions import FieldError
@@ -14,7 +28,7 @@ from django.db.models import fields
 
 class JSONSchemaMetaClass(type):
     def __new__(cls, class_name, bases, attrs):
-        super_new = super().__new__
+        super_new = super(JSONSchemaMetaClass, cls).__new__
 
         # Ensure initialization is only performed for subclasses of JSONSchema
         # (excluding JSONSchema class itself).
@@ -200,7 +214,7 @@ class JSONFieldMixin(object):
     """
     def __init__(self, *args, **kwargs):
         self.json_field_name = kwargs.pop('json_field_name', 'data')
-        super().__init__(*args, **kwargs)
+        super(JSONFieldMixin, self).__init__(*args, **kwargs)
 
     def contribute_to_class(self, cls, name, private_only=False):
         self.set_attributes_from_name(name)
