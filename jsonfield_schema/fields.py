@@ -11,7 +11,7 @@ def JSONField(*args, **kwargs):
     """
     db_vendor = kwargs.pop('db_vendor', None)
     if db_vendor is None:
-        backend = import_module('{}.base'.format(settings.DATABASES['default']['ENGINE']))
+        backend = import_module('{}.base'.format(settings.DATABASES['default']['ENGINE']).replace('_psycopg2', ''))
         db_vendor = backend.DatabaseWrapper.vendor
 
     if db_vendor == 'postgresql':
