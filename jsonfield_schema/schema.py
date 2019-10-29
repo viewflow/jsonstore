@@ -87,16 +87,23 @@ class JSONSchema(with_metaclass(JSONSchemaMetaClass, object)):  # NOQA
                 field.contribute_to_class(cls, attr_name)
 
     def construct_field(self, field_name, field_def):
+        field_kwargs = {
+            'json_field_name': self.json_field_name,
+            'blank': field_name not in getattr(self.Meta, 'required', []),
+        }
+        if field_def.get('helpText'):
+            field_kwargs['help_text'] = field_def['helpText']
+        if field_def.get('verboseName'):
+            field_kwargs['verbose_name'] = field_def['verboseName']
+
         field_type = field_def.get('type', None)
         field_format = field_def.get('format', None)
-        required = field_name in getattr(self.Meta, 'required', [])
-        validators = []
-
         if field_type == 'string' and field_format is None:
             min_length = field_def.get('minLength', None)
             max_length = field_def.get('maxLength', None)
             pattern = field_def.get('pattern', None)
 
+            validators = []
             if min_length:
                 validators.append(MinLengthValidator(min_length))
             if pattern:
@@ -104,59 +111,53 @@ class JSONSchema(with_metaclass(JSONSchemaMetaClass, object)):  # NOQA
 
             if max_length is None:
                 return TextField(
-                    blank=not required,
                     validators=validators,
-                    json_field_name=self.json_field_name,
+                    **field_kwargs
                 )
             else:
                 return CharField(
                     max_length=max_length,
-                    blank=not required,
                     validators=validators,
-                    json_field_name=self.json_field_name,
+                    **field_kwargs
                 )
         elif field_type == 'string' and field_format == 'date':
             return DateField(
-                blank=not required,
-                json_field_name=self.json_field_name,
+                **field_kwargs
             )
         elif field_type == 'string' and field_format == 'time':
             return TimeField(
-                blank=not required,
-                json_field_name=self.json_field_name,
+                **field_kwargs
             )
         elif field_type == 'string' and field_format == 'date-time':
             return DateTimeField(
-                blank=not required,
-                json_field_name=self.json_field_name,
+                **field_kwargs
             )
         elif field_type == 'string' and field_format == 'email':
             return EmailField(
-                blank=not required,
-                json_field_name=self.json_field_name,
+                **field_kwargs
             )
         elif field_type == 'string' and field_format == 'ipv4':
             return IPAddressField(
-                blank=not required,
-                json_field_name=self.json_field_name,
+                **field_kwargs
             )
         elif field_type == 'string' and field_format == 'ipv6':
             return GenericIPAddressField(
-                blank=not required,
-                json_field_name=self.json_field_name,
+                **field_kwargs
             )
         elif field_type == 'string' and field_format == 'uri':
             return URLField(
-                blank=not required,
-                json_field_name=self.json_field_name,
+                **field_kwargs
             )
         elif field_type == 'integer':
-            return IntegerField(json_field_name=self.json_field_name)
+            return IntegerField(
+                **field_kwargs
+            )
         elif field_type == 'number':
             maximum = field_def.get('maximum', None)
             minimum = field_def.get('minimum', None)
             multiple_of = field_def.get('multipleOf', None)
 
+            validators = []
             if minimum:
                 validators.append(MinValueValidator(maximum))
             if maximum:
@@ -169,15 +170,21 @@ class JSONSchema(with_metaclass(JSONSchemaMetaClass, object)):  # NOQA
                 return DecimalField(
                     max_digits=max_digits,
                     decimal_places=decimal_places,
-                    json_field_name=self.json_field_name,
+                    **field_kwargs
                 )
             else:
-                return FloatField(json_field_name=self.json_field_name)
+                return FloatField(
+                    **field_kwargs
+                )
         elif field_type == 'boolean':
-            if required:
-                return BooleanField(json_field_name=self.json_field_name)
+            if field_kwargs['blank']:
+                return NullBooleanField(
+                    **field_kwargs
+                )
             else:
-                return NullBooleanField(json_field_name=self.json_field_name)
+                return BooleanField(
+                    **field_kwargs
+                )
 
         return None
 
