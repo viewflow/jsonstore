@@ -19,7 +19,7 @@ class Test(TestCase):
         model = NullBooleanFieldModel(nullboolean_field=False)
         self.assertIsInstance(
             model._meta.get_field('nullboolean_field'),
-            models.BooleanField
+            models.NullBooleanField
         )
         self.assertEqual(model.data, {
             'nullboolean_field': False

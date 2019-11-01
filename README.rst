@@ -53,7 +53,7 @@ Quick start
 
     class Employee(models.Model):
         _schema = EmployeeSchema()
-        data = JSONField()
+        data = JSONField(default={})
 
     class EmployeeForm(forms.ModelForm):
         class Meta:

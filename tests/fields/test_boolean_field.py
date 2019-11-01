@@ -8,15 +8,6 @@ class Schema(JSONSchema):
         'type': 'boolean'
     }
 
-    # char_field = {
-    #     'type': "string",
-    # }
-
-    # date_field = {
-    #     'type': 'string',
-    #     'format': 'date',
-    # }
-
     class Meta:
         required = ['boolean_field']
 

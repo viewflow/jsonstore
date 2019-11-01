@@ -16,14 +16,17 @@ except ImportError:
                            *(self.args or ()), **(self.keywords or {}))
 
 
+from datetime import date, datetime
 from six import with_metaclass
 
+import django
 from django.core.exceptions import FieldError
 from django.core.validators import (
     MaxValueValidator, MinValueValidator, MinLengthValidator,
     RegexValidator
 )
 from django.db.models import fields
+from django.utils import dateparse
 
 
 class JSONSchemaMetaClass(type):
@@ -198,17 +201,21 @@ class JSONFieldDescriptor(object):
             return self
         json_value = getattr(instance, self.field.json_field_name)
         if isinstance(json_value, dict):
-            # todo from json
-            return json_value.get(self.field.attname, None)
+            value = json_value.get(self.field.attname, None)
+            if hasattr(self.field, 'from_json'):
+                value = self.field.from_json(value)
+            return value
         return None
 
     def __set__(self, instance, value):
         json_value = getattr(instance, self.field.json_field_name)
-        # todo value = to_json
         if json_value:
             assert isinstance(json_value, dict)
         else:
             json_value = {}
+
+        if hasattr(self.field, 'to_json'):
+            value = self.field.to_json(value)
 
         if not value and self.field.blank and not self.field.null:
             try:
@@ -277,7 +284,10 @@ class JSONFieldMixin(object):
 
 
 class BooleanField(JSONFieldMixin, fields.BooleanField):
-    pass
+    def __init__(self, *args, **kwargs):
+        super(BooleanField, self).__init__(self, *args, **kwargs)
+        if django.VERSION < (2, ):
+            self.blank = False
 
 
 class CharField(JSONFieldMixin, fields.CharField):
@@ -285,7 +295,14 @@ class CharField(JSONFieldMixin, fields.CharField):
 
 
 class DateField(JSONFieldMixin, fields.DateField):
-    pass
+    def to_json(self, value):
+        if value:
+            assert isinstance(value, (datetime, date))
+            return value.strftime('%Y-%m-%d')
+
+    def from_json(self, value):
+        if value is not None:
+            return dateparse.parse_date(value)
 
 
 class DateTimeField(JSONFieldMixin, fields.DateTimeField):
