@@ -190,28 +190,35 @@ class JSONSchema(with_metaclass(JSONSchemaMetaClass, object)):  # NOQA
 
 
 class JSONFieldDescriptor(object):
-    def __init__(self, field_name, json_field_name='data'):
-        self.field_name = field_name
-        self.json_field_name = json_field_name
+    def __init__(self, field):
+        self.field = field
 
     def __get__(self, instance, cls=None):
         if instance is None:
             return self
-        json_value = getattr(instance, self.json_field_name)
+        json_value = getattr(instance, self.field.json_field_name)
         if isinstance(json_value, dict):
             # todo from json
-            return json_value.get(self.field_name, None)
+            return json_value.get(self.field.attname, None)
         return None
 
     def __set__(self, instance, value):
-        json_value = getattr(instance, self.json_field_name)
+        json_value = getattr(instance, self.field.json_field_name)
         # todo value = to_json
         if json_value:
             assert isinstance(json_value, dict)
-            json_value[self.field_name] = value
         else:
-            json_value = {self.field_name: value}
-        setattr(instance, self.json_field_name, json_value)
+            json_value = {}
+
+        if not value and self.field.blank and not self.field.null:
+            try:
+                del json_value[self.field.attname]
+            except KeyError:
+                pass
+        else:
+            json_value[self.field.attname] = value
+
+        setattr(instance, self.field.json_field_name, json_value)
 
 
 class JSONFieldMixin(object):
@@ -231,7 +238,7 @@ class JSONFieldMixin(object):
         cls._meta.add_field(self, private=True)
 
         if not getattr(cls, self.attname, None):
-            descriptor = JSONFieldDescriptor(self.attname, self.json_field_name)
+            descriptor = JSONFieldDescriptor(self)
             setattr(cls, self.attname, descriptor)
 
         if self.choices is not None:
