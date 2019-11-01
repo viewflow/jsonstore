@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.3.0 2019-11-01
+----------------
+
+* Support for date/time/datetime values
+* Support for help_text (description) and verbose_name (verboseName) field specs
+
+
 0.2.0 2019-10-25
 ----------------
 

@@ -16,6 +16,9 @@ and replace multi-table inheritance joins.
 .. image:: https://img.shields.io/pypi/pyversions/django-jsonfield-schema.svg
     :target: https://pypi.python.org/pypi/django-jsonfield-schema
 
+.. image:: https://img.shields.io/pypi/djversions/django-jsonfield-schema.svg
+    :target: https://pypi.python.org/pypi/django-jsonfield-schema
+
 *Use with caution! Replacing relational structures with JSON data should be
 mindfull architecture decision.*
 
@@ -96,7 +99,9 @@ your stack.
 Latest changelog
 ================
 
-0.2.0 2019-10-25
+0.3.0 2019-11-01
 ----------------
 
-* Support for Python 2.7 and django 1.11/3.0
+* Support for date/time/datetime values
+* Support for help_text (description) and verbose_name (verboseName) field specs
+
