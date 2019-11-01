@@ -94,8 +94,8 @@ class JSONSchema(with_metaclass(JSONSchemaMetaClass, object)):  # NOQA
             'json_field_name': self.json_field_name,
             'blank': field_name not in getattr(self.Meta, 'required', []),
         }
-        if field_def.get('helpText'):
-            field_kwargs['help_text'] = field_def['helpText']
+        if field_def.get('description'):
+            field_kwargs['help_text'] = field_def['description']
         if field_def.get('verboseName'):
             field_kwargs['verbose_name'] = field_def['verboseName']
 

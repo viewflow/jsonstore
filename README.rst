@@ -2,7 +2,7 @@
 Django JSONField-Schema
 =======================
 
-Expose JSONField data as set of virtual django model fields.
+Expose Django JSONField data as virtual model fields
 
 Use ModelForm and ModelAdmin as usual. Perform simple queries. Migrate to real
 table columns when needed without code change.
