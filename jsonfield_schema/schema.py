@@ -26,7 +26,7 @@ from django.core.validators import (
     RegexValidator
 )
 from django.db.models import fields
-from django.utils import dateparse
+from django.utils import dateparse, timezone
 
 
 class JSONSchemaMetaClass(type):
@@ -306,7 +306,15 @@ class DateField(JSONFieldMixin, fields.DateField):
 
 
 class DateTimeField(JSONFieldMixin, fields.DateTimeField):
-    pass
+    def to_json(self, value):
+        if value:
+            if not timezone.is_aware(value):
+                value = timezone.make_aware(value)
+            return value.isoformat()
+
+    def from_json(self, value):
+        if value:
+            return dateparse.parse_datetime(value)
 
 
 class DecimalField(JSONFieldMixin, fields.DecimalField):
@@ -342,7 +350,15 @@ class TextField(JSONFieldMixin, fields.TextField):
 
 
 class TimeField(JSONFieldMixin, fields.TimeField):
-    pass
+    def to_json(self, value):
+        if value:
+            if not timezone.is_aware(value):
+                value = timezone.make_aware(value)
+            return value.isoformat()
+
+    def from_json(self, value):
+        if value:
+            return dateparse.parse_time(value)
 
 
 class URLField(JSONFieldMixin, fields.URLField):

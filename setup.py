@@ -31,6 +31,7 @@ setup(
     ],
     install_requires=[
         'Django>=1.11',
+        'six',
     ],
     packages=['jsonfield_schema'],
     include_package_data=True,
