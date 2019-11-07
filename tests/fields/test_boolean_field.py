@@ -1,20 +1,11 @@
+import jsonstore
 from django.db import models
 from django.test import TestCase
-from jsonfield_schema import JSONField, JSONSchema
-
-
-class Schema(JSONSchema):
-    boolean_field = {
-        'type': 'boolean'
-    }
-
-    class Meta:
-        required = ['boolean_field']
 
 
 class BooleanFieldModel(models.Model):
-    _schema = Schema()
-    data = JSONField()
+    data = jsonstore.JSONField()
+    boolean_field = jsonstore.BooleanField(json_field_name='data')
 
 
 class Test(TestCase):

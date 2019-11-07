@@ -1,11 +1,10 @@
-from django.contrib.auth.models import AbstractUser
-from django.urls import reverse
-from polymodels.models import PolymorphicModel
-from jsonfield_schema import JSONField
-from . import schemas
+import jsonstore
 
-from polymodels.managers import PolymorphicManager
+from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
+from django.urls import reverse
+from polymodels.managers import PolymorphicManager
+from polymodels.models import PolymorphicModel
 
 
 class UserManager(PolymorphicManager, UserManager):
@@ -13,13 +12,18 @@ class UserManager(PolymorphicManager, UserManager):
 
 
 class User(PolymorphicModel, AbstractUser):
-    _schema = schemas.User()
-    data = JSONField(null=True)
+    data = jsonstore.JSONField(null=True, default={})
     objects = UserManager()
 
 
 class Employee(User):
-    _schema = schemas.Employee()
+    hire_date = jsonstore.DateField()
+    salary = jsonstore.DecimalField(max_digits=10, decimal_places=2)
+    department = jsonstore.CharField(max_length=200, choices=[
+        ('Marketing', 'Marketing'),
+        ('Development', 'Development'),
+        ('Sales', 'Sales'),
+    ])
 
     def get_absolute_url(self):
         return reverse('employee_edit', args=[self.pk])
@@ -29,7 +33,10 @@ class Employee(User):
 
 
 class Client(User):
-    _schema = schemas.Client()
+    address = jsonstore.CharField(max_length=250)
+    zip_code = jsonstore.CharField(max_length=250)
+    city = jsonstore.CharField(max_length=250)
+    vip = jsonstore.BooleanField()
 
     def get_absolute_url(self):
         return reverse('client_edit', args=[self.pk])

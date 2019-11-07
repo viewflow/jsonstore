@@ -1,5 +1,5 @@
 =======================
-Django JSONField-Schema
+Django JSONStore
 =======================
 
 Expose Django JSONField data as virtual model fields
@@ -34,29 +34,17 @@ Quick start
 
 .. code:: python
 
+    import jsonstore
     from django import forms
     from django.contrib import admin
     from django.db import models
-    from jsonfield_schema import JSONSchema
-
-    class EmployeeSchema(JSONSchema):
-        full_name = {
-            "type": "string"
-        }
-
-        hire_date = {
-            "type": "string",
-            "format": "date"
-        }
-
-        salary = {
-            "type": "number",
-            "multiplyOf": 0.01,
-        }
+    from .??. import JSONField
 
     class Employee(models.Model):
-        _schema = EmployeeSchema()
         data = JSONField(default={})
+        full_name = jsonstore.CharField(max_length=250)
+        hire_date = jsonstore.DateField()
+        salary = jsonstore.DecimalField(max_digits=10, decimal_places=2)
 
     class EmployeeForm(forms.ModelForm):
         class Meta:
@@ -86,7 +74,7 @@ JSONField and `Django-Polymodels <https://github.com/charettes/django-polymodels
 License
 =======
 
-Django JSONField-Schema is an Open Source project licensed under the terms of
+Django JSONStore is an Open Source project licensed under the terms of
 the AGPL license - `The GNU Affero General Public License v3.0
 <http://www.gnu.org/licenses/agpl-3.0.html>`_ with the Additional Permissions
 described in `LICENSE_EXCEPTION <./LICENSE_EXCEPTION>`_
@@ -99,9 +87,8 @@ your stack.
 Latest changelog
 ================
 
-0.3.0 2019-11-01
+0.4.0 2019-11-07
 ----------------
 
-* Support for date/time/datetime values
-* Support for help_text (description) and verbose_name (verboseName) field specs
+* Whole idea simplified. The library renamed to 'jsonstore'
 

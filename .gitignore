@@ -6,7 +6,7 @@
 build
 html
 dist
-django_jsonfield_schema.egg-info
+django_jsonstore.egg-info
 MANIFEST
 dj*.sqlite3
 node_modules/

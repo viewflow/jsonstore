@@ -1,26 +1,12 @@
+import jsonstore
 from django.db import models
 from django.test import TestCase
-from jsonfield_schema import JSONField, JSONSchema
-
-
-class Schema(JSONSchema):
-    char_field = {
-        'type': "string",
-        'maxLength': 250,
-    }
-
-    required_char_field = {
-        'type': "string",
-        'maxLength': 250,
-    }
-
-    class Meta:
-        required = ['required_char_field']
 
 
 class CharFieldModel(models.Model):
-    _schema = Schema()
-    data = JSONField(default={})
+    data = jsonstore.JSONField(default={})
+    char_field = jsonstore.CharField(max_length=250, blank=True)
+    required_char_field = jsonstore.CharField(max_length=250)
 
 
 class Test(TestCase):

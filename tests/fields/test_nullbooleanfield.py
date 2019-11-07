@@ -1,17 +1,11 @@
+import jsonstore
 from django.db import models
 from django.test import TestCase
-from jsonfield_schema import JSONField, JSONSchema
-
-
-class Schema(JSONSchema):
-    nullboolean_field = {
-        'type': 'boolean'
-    }
 
 
 class NullBooleanFieldModel(models.Model):
-    _schema = Schema()
-    data = JSONField()
+    data = jsonstore.JSONField()
+    nullboolean_field = jsonstore.NullBooleanField()
 
 
 class Test(TestCase):

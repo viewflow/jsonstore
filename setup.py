@@ -4,15 +4,15 @@ from setuptools import setup
 
 
 setup(
-    name='django-jsonfield-schema',
-    version='0.3.0',
+    name='django-jsonstore',
+    version='0.4.0',
     author='Mikhail Podgurskiy',
     author_email='kmmbvnr@gmail.com',
     description='Expose JSONField data as a virtual django model fields.',
     long_description=open('README.rst').read(),
     platforms=['Any'],
-    keywords=['workflow', 'django', 'bpm', 'automaton'],
-    url='http://github.com/viewflow/jsonfield-schema',
+    keywords=['django', 'json', 'orm'],
+    url='http://github.com/viewflow/jsonstore',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -35,7 +35,7 @@ setup(
         'Django>=1.11',
         'six',
     ],
-    packages=['jsonfield_schema'],
+    packages=['jsonstore'],
     include_package_data=True,
     zip_safe=False
 )

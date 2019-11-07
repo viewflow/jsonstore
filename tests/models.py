@@ -1,23 +1,25 @@
+import jsonstore
 from django.db import models
-from jsonfield_schema import JSONField
-from . import schemas
 
 
 class Order(models.Model):
-    data = JSONField()
+    data = jsonstore.JSONField()
 
 
 class Person(models.Model):
-    _schema = schemas.Person()
-    data = JSONField()
+    data = jsonstore.JSONField()
+    name = jsonstore.CharField(max_length=250)
+    address = jsonstore.CharField(max_length=250, blank=True)
 
 
 class Client(Person):
-    _schema = schemas.Client()
+    birthdate = jsonstore.DateField()
+    business_phone = jsonstore.CharField(max_length=250)
 
 
 class VIPClient(Client):
-    _schema = schemas.VIPClient()
+    approved = jsonstore.BooleanField()
+    personal_phone = jsonstore.CharField(max_length=250)
 
     class Meta:
         proxy = True

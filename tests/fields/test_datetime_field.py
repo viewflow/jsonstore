@@ -1,19 +1,12 @@
+import jsonstore
 from django.db import models
 from django.test import TestCase
 from django.utils import timezone
-from jsonfield_schema import JSONField, JSONSchema
-
-
-class Schema(JSONSchema):
-    datetime_field = {
-        'type': 'string',
-        'format': 'date-time',
-    }
 
 
 class DateTimeFieldModel(models.Model):
-    _schema = Schema()
-    data = JSONField()
+    data = jsonstore.JSONField()
+    datetime_field = jsonstore.DateTimeField(blank=True, null=False)
 
 
 class Test(TestCase):
