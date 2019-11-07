@@ -96,5 +96,3 @@ Latest changelog
 ----------------
 
 * Whole idea simplified. The library renamed to 'jsonstore'
-
-
