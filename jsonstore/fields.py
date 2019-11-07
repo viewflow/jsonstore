@@ -150,7 +150,7 @@ class JSONFieldMixin(object):
 
 class BooleanField(JSONFieldMixin, fields.BooleanField):
     def __init__(self, *args, **kwargs):
-        super(BooleanField, self).__init__(self, *args, **kwargs)
+        super(BooleanField, self).__init__(*args, **kwargs)
         if django.VERSION < (2, ):
             self.blank = False
 

@@ -2,6 +2,18 @@
 Changelog
 =========
 
+0.4.1 2019-11-07
+----------------
+
+* Fix boolean field
+
+
+0.4.0 2019-11-07
+----------------
+
+* Whole idea simplified. The library renamed to 'jsonstore'
+
+
 0.3.0 2019-11-01
 ----------------
 
