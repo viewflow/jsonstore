@@ -10,14 +10,14 @@ table columns when needed without code change.
 Suitable to store dumb business data, quick prototypes without DB migrations,
 and replace multi-table inheritance joins.
 
-.. image:: https://img.shields.io/pypi/v/django-jsonfield-schema.svg
-    :target: https://pypi.python.org/pypi/django-jsonfield-schema
+.. image:: https://img.shields.io/pypi/v/django-jsonstore.svg
+    :target: https://pypi.python.org/pypi/django-jsonstore
 
-.. image:: https://img.shields.io/pypi/pyversions/django-jsonfield-schema.svg
-    :target: https://pypi.python.org/pypi/django-jsonfield-schema
+.. image:: https://img.shields.io/pypi/pyversions/django-jsonstore.svg
+    :target: https://pypi.python.org/pypi/django-jsonstore
 
-.. image:: https://img.shields.io/pypi/djversions/django-jsonfield-schema.svg
-    :target: https://pypi.python.org/pypi/django-jsonfield-schema
+.. image:: https://img.shields.io/pypi/djversions/django-jsonstore.svg
+    :target: https://pypi.python.org/pypi/django-jsonstore
 
 *Use with caution! Replacing relational structures with JSON data should be
 mindfull architecture decision.*
