@@ -26,7 +26,7 @@ def JSONField(*args, **kwargs):
         db_vendor = backend.DatabaseWrapper.vendor
 
     try:
-        from django.models import JSONField as DJ_JSONField
+        from django.db.models import JSONField as DJ_JSONField
         return DJ_JSONField(*args, **kwargs)
     except ImportError:
         pass
