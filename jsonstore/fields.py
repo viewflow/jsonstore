@@ -25,6 +25,12 @@ def JSONField(*args, **kwargs):
         backend = import_module('{}.base'.format(settings.DATABASES['default']['ENGINE']).replace('_psycopg2', ''))
         db_vendor = backend.DatabaseWrapper.vendor
 
+    try:
+        from django.db.models import JSONField as DJ_JSONField
+        return DJ_JSONField(*args, **kwargs)
+    except ImportError:
+        pass
+        
     if db_vendor == 'postgresql':
         from django.contrib.postgres.fields import JSONField as PG_JSONField
         return PG_JSONField(*args, **kwargs)
