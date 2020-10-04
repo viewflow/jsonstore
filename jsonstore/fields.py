@@ -20,6 +20,12 @@ def JSONField(*args, **kwargs):
     Returns json field implementation depends on the
     default db connection type or `db_vendor` keyword argument
     """
+
+    # Django 3.1 have a JSONField
+    if django.VERSION >= (3, 1):
+        from django.db.models import JSONField as Official_JSONField
+        return Official_JSONField(*args, **kwargs)
+
     db_vendor = kwargs.pop('db_vendor', None)
     if db_vendor is None:
         backend = import_module('{}.base'.format(settings.DATABASES['default']['ENGINE']).replace('_psycopg2', ''))
@@ -30,7 +36,7 @@ def JSONField(*args, **kwargs):
         return DJ_JSONField(*args, **kwargs)
     except ImportError:
         pass
-        
+
     if db_vendor == 'postgresql':
         from django.contrib.postgres.fields import JSONField as PG_JSONField
         return PG_JSONField(*args, **kwargs)
