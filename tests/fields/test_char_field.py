@@ -4,7 +4,7 @@ from django.test import TestCase
 
 
 class CharFieldModel(models.Model):
-    data = jsonstore.JSONField(default={})
+    data = jsonstore.JSONField(default=dict)
     char_field = jsonstore.CharField(max_length=250, blank=True)
     required_char_field = jsonstore.CharField(max_length=250)
 

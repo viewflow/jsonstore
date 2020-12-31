@@ -12,7 +12,7 @@ class UserManager(PolymorphicManager, UserManager):
 
 
 class User(PolymorphicModel, AbstractUser):
-    data = jsonstore.JSONField(null=True, default={})
+    data = jsonstore.JSONField(null=True, default=dict)
     objects = UserManager()
 
 
