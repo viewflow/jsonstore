@@ -30,15 +30,15 @@ def JSONField(*args, **kwargs):
         return DJ_JSONField(*args, **kwargs)
     except ImportError:
         pass
-        
+
     if db_vendor == 'postgresql':
         from django.contrib.postgres.fields import JSONField as PG_JSONField
         return PG_JSONField(*args, **kwargs)
     elif db_vendor == 'mysql':
         try:
-            from django_mysql.models import JSONField as MY_JSONField
+            from django_jsonfield_backport.models import JSONField as MY_JSONField
         except ImportError:
-            raise ImportError("django-mysql isn't installed")
+            raise ImportError("django-jsonfield-backport isn't installed")
         else:
             return MY_JSONField(*args, **kwargs)
     elif db_vendor == 'oracle':
