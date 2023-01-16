@@ -2,6 +2,12 @@
 Changelog
 =========
 
+0.5.1 2023-01-16
+----------------
+
+Package deprication on favor of django-viewflow
+
+
 0.5.0 2020-12-31
 ----------------
 

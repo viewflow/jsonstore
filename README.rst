@@ -2,6 +2,21 @@
 Django JSONStore
 =======================
 
+IN ORDER TO REDUCE MAINTENANCE COST, THE PACKAGE FUNCTIONALITY WAS MOVED INTO THE django-viewflow
+
+PLEASE, CONSIDE TO UPGRADE AND UPDATE IMPORTS:
+
+
+...code::bash
+
+    $ pip install django-viewflow>=2.0.0b1
+
+
+..code::python
+
+    from viewflow import jsonstore
+
+
 Expose Django JSONField data as virtual model fields
 
 Use ModelForm and ModelAdmin as usual. Perform simple queries. Migrate to real
@@ -87,7 +102,7 @@ your stack.
 Latest changelog
 ================
 
-0.5.0 2020-12-31
+0.5.1 2023-01-16
 ----------------
 
-Support for Django 3.1 JSONField
+Package deprication on favor of django-viewflow

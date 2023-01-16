@@ -153,6 +153,17 @@ class JSONFieldMixin(object):
 
         return TransformFactoryWrapper(json_field, transform, name)
 
+    def convert_json_value(self, value, expression, connection):
+        if isinstance(value, str):
+            import json
+            return json.loads(value)[self.name]
+        return value
+
+    def get_db_converters(self, connection):
+        converters = super().get_db_converters(connection)
+        converters += [self.convert_json_value]
+        return converters
+
 
 class BooleanField(JSONFieldMixin, fields.BooleanField):
     def __init__(self, *args, **kwargs):

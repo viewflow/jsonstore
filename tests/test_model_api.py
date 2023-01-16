@@ -14,3 +14,8 @@ class Test(TestCase):
 
         self.assertEqual(person.name, 'John Doe')
         self.assertEqual(person.data, {'name': 'John Doe'})
+
+    def test_values_list(self):
+        Person.objects.create(name='john')
+        query = Person.objects.values_list('name')
+        self.assertEqual(list(query), [('john',)])

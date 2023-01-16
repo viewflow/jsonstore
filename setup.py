@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='django-jsonstore',
-    version='0.5.0',
+    version='0.5.1',
     author='Mikhail Podgurskiy',
     author_email='kmmbvnr@gmail.com',
     description='Expose JSONField data as a virtual django model fields.',
