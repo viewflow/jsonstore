@@ -7,12 +7,12 @@ IN ORDER TO REDUCE MAINTENANCE COST, THE PACKAGE FUNCTIONALITY WAS MOVED INTO TH
 PLEASE, CONSIDE TO UPGRADE AND UPDATE IMPORTS:
 
 
-...code::bash
+.. code::bash
 
     $ pip install django-viewflow>=2.0.0b1
 
 
-..code::python
+.. code::python
 
     from viewflow import jsonstore
 
