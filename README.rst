@@ -18,6 +18,9 @@ PLEASE, CONSIDE TO UPGRADE AND UPDATE IMPORTS:
     from viewflow import jsonstore
 
 
+Description
+===========
+
 Expose Django JSONField data as virtual model fields
 
 Use ModelForm and ModelAdmin as usual. Perform simple queries. Migrate to real
