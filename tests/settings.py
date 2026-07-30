@@ -39,9 +39,22 @@ if os.environ.get("DATABASE_URL"):
     DATABASES = {"default": dj_database_url.config()}
 
     if "oracle" in DATABASES["default"]["ENGINE"]:
+        oracle = DATABASES["default"]
+        # With PORT set, Django builds the DSN as makedsn(host, port, sid) --
+        # and the container publishes a *service* name, not a SID. Pass the
+        # whole "host:port/service" string as NAME instead, which Django uses
+        # verbatim when PORT is empty.
+        if oracle["PORT"]:
+            oracle["NAME"] = "%s:%s/%s" % (
+                oracle["HOST"] or "localhost",
+                oracle["PORT"],
+                oracle["NAME"],
+            )
+            oracle["HOST"] = ""
+            oracle["PORT"] = ""
         # Oracle's test runner creates a dedicated user and tablespace rather
         # than a database, and needs to be told which ones to use.
-        DATABASES["default"]["TEST"] = {
+        oracle["TEST"] = {
             "USER": "test_jsonstore",
             "PASSWORD": "jsonstore",
             "TBLSPACE": "test_jsonstore",

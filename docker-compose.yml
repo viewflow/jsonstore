@@ -1,5 +1,8 @@
 # Databases for running the test suite against a real backend.
 #
+# Host ports are offset by 50000 so they never collide with a natively
+# installed postgres/mysql on the default port.
+#
 #   docker compose up -d postgres mysql mariadb
 #   make test-postgres test-mysql test-mariadb
 #
@@ -16,7 +19,7 @@ services:
       POSTGRES_PASSWORD: jsonstore
       POSTGRES_DB: jsonstore
     ports:
-      - "5432:5432"
+      - "55432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U jsonstore"]
       interval: 5s
@@ -25,14 +28,13 @@ services:
 
   mysql:
     image: mysql:8.4
-    command: --default-authentication-plugin=caching_sha2_password
     environment:
       MYSQL_ROOT_PASSWORD: jsonstore
       MYSQL_USER: jsonstore
       MYSQL_PASSWORD: jsonstore
       MYSQL_DATABASE: jsonstore
     ports:
-      - "3306:3306"
+      - "53306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-pjsonstore"]
       interval: 5s
@@ -47,7 +49,7 @@ services:
       MARIADB_PASSWORD: jsonstore
       MARIADB_DATABASE: jsonstore
     ports:
-      - "3307:3306"
+      - "53307:3306"
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
@@ -64,7 +66,7 @@ services:
       APP_USER: jsonstore
       APP_USER_PASSWORD: jsonstore
     ports:
-      - "1521:1521"
+      - "51521:1521"
     healthcheck:
       test: ["CMD", "healthcheck.sh"]
       interval: 10s

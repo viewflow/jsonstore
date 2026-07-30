@@ -38,7 +38,10 @@ New since 0.5.1:
   third-party JSONField shims and the ``queryset`` module are gone.
 
 Supports only Django versions still under upstream support -- 5.2 LTS, 6.0 and
-6.1 -- on Python 3.10+.
+6.1 -- on Python 3.10+. The suite passes on SQLite, PostgreSQL 17, MySQL 8.4,
+MariaDB 11 and Oracle 23ai. On MariaDB and Oracle, ``order_by()`` on a numeric
+virtual field sorts the extracted value as text; those two assertions are
+skipped there.
 
 
 0.5.1 2023-01-16

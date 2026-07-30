@@ -3,10 +3,11 @@
 PYTHON ?= python
 TEST ?= ./manage.py test tests
 
-POSTGRES_URL ?= postgres://jsonstore:jsonstore@127.0.0.1:5432/jsonstore
-MYSQL_URL    ?= mysql://jsonstore:jsonstore@127.0.0.1:3306/jsonstore
-MARIADB_URL  ?= mysql://jsonstore:jsonstore@127.0.0.1:3307/jsonstore
-ORACLE_URL   ?= oracle://system:jsonstore@127.0.0.1:1521/FREEPDB1
+POSTGRES_URL ?= postgres://jsonstore:jsonstore@127.0.0.1:55432/jsonstore
+# root: the test runner creates a separate test_ database
+MYSQL_URL    ?= mysql://root:jsonstore@127.0.0.1:53306/jsonstore
+MARIADB_URL  ?= mysql://root:jsonstore@127.0.0.1:53307/jsonstore
+ORACLE_URL   ?= oracle://system:jsonstore@127.0.0.1:51521/FREEPDB1
 
 help:  ## show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'

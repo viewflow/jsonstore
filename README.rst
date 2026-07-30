@@ -346,6 +346,9 @@ Limitations
   Call ``instance.save()`` afterwards.
 * No indexes on virtual fields unless you add a functional index on the JSON
   column yourself. Filtering scans the document.
+* On MariaDB and Oracle, ``order_by()`` on a numeric field sorts the extracted
+  value as text, so 10 comes before 2. PostgreSQL, MySQL and SQLite sort
+  numerically.
 * ``EmbeddedListField`` has no ``through`` model and no ordering guarantee
   beyond list order.
 

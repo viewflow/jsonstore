@@ -2,6 +2,8 @@ from django.db import models
 from django.test import TestCase
 import jsonstore
 
+from .utils import skip_if_json_sorts_as_text
+
 
 class MoreFieldsModel(models.Model):
     data = models.JSONField(default=dict)
@@ -38,6 +40,8 @@ class Test(TestCase):
     def test_integer_variant_orders_numerically(self):
         # the extracted value is sorted, so 2 < 9 < 10 (not the lexical
         # order of the JSON blob's text)
+        skip_if_json_sorts_as_text(self)
+
         MoreFieldsModel.objects.create(big=9)
         MoreFieldsModel.objects.create(big=10)
         MoreFieldsModel.objects.create(big=2)

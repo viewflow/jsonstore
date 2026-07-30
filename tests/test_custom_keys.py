@@ -5,6 +5,8 @@ from django.db import connection, models
 from django.test import TestCase
 import jsonstore
 
+from .utils import raw_text
+
 
 class CustomKeyModel(models.Model):
     data = models.JSONField(default=dict)
@@ -112,7 +114,7 @@ class RoundtripTest(TestCase):
         # persisted shape in the actual columns
         with connection.cursor() as cur:
             cur.execute("SELECT data, meta FROM %s" % CustomKeyModel._meta.db_table)
-            data_col, meta_col = cur.fetchone()
+            data_col, meta_col = (raw_text(v) for v in cur.fetchone())
 
         obj = CustomKeyModel.objects.get()
         self.assertEqual(obj.full_name, "Ann")

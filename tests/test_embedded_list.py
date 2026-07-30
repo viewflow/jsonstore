@@ -5,6 +5,8 @@ from django.db import connection, models
 from django.test import TestCase
 import jsonstore
 
+from .utils import raw_text
+
 
 class LineItem(jsonstore.EmbeddedModel):
     sku = jsonstore.CharField(max_length=10)
@@ -165,7 +167,7 @@ class RoundtripTest(TestCase):
 
         with connection.cursor() as cur:
             cur.execute("SELECT data, extra FROM %s" % Cart._meta.db_table)
-            data_col, extra_col = cur.fetchone()
+            data_col, extra_col = (raw_text(v) for v in cur.fetchone())
         self.assertIn('"lines"', data_col)
         self.assertIn('"archived"', extra_col)
 

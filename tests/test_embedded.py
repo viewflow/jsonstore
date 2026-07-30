@@ -5,6 +5,8 @@ from django.db import connection, models
 from django.test import TestCase
 import jsonstore
 
+from .utils import raw_text
+
 
 class Money(jsonstore.EmbeddedModel):
     amount = jsonstore.IntegerField()
@@ -160,7 +162,7 @@ class RoundtripTest(TestCase):
 
         with connection.cursor() as cur:
             cur.execute("SELECT data, extra FROM %s" % Product._meta.db_table)
-            data_col, extra_col = cur.fetchone()
+            data_col, extra_col = (raw_text(v) for v in cur.fetchone())
         self.assertIn('"price"', data_col)
         self.assertIn('"line"', extra_col)
 

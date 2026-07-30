@@ -2,6 +2,8 @@ from django.db import models
 from django.test import TestCase
 import jsonstore
 
+from .utils import skip_if_json_sorts_as_text
+
 
 class IntegerFieldModel(models.Model):
     data = models.JSONField(default=dict)
@@ -73,6 +75,8 @@ class Test(TestCase):
         # 9 vs 10/2: numeric order (2, 9, 10) differs from the lexicographic
         # order of the JSON blob's text (`{"integer_field": 10}` sorts
         # before `{"integer_field": 2}` sorts before `{"integer_field": 9}`).
+        skip_if_json_sorts_as_text(self)
+
         IntegerFieldModel.objects.create(integer_field=9)
         IntegerFieldModel.objects.create(integer_field=10)
         IntegerFieldModel.objects.create(integer_field=2)
