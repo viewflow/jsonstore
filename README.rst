@@ -346,8 +346,6 @@ own code keeps your own license, and you do not release its source. The
 condition is that you do not change the source code of this package.
 
 If you do change this package, the AGPL applies to your modified version of it.
-Then you must give the source code of the modified package to each user who
-asks for it, not more than 15 days after the request.
 
 The license scheme is the same as the license scheme of the GCC Runtime
 Library. The text above is a summary. Read `LICENSE_EXCEPTION
