@@ -326,22 +326,27 @@ document; nothing else in your code has to change.
 Supported databases
 ===================
 
+Django's own ``JSONField`` does the storage, so the requirements match
+`Django's <https://docs.djangoproject.com/en/stable/ref/models/fields/#jsonfield>`_:
+PostgreSQL, MySQL, MariaDB, Oracle and SQLite. Querying a virtual field
+compiles to a key transform on the JSON column, so the database has to be able
+to index into the document.
+
 ======================= ==================================================
-Database                Status
+Database                Test suite
 ======================= ==================================================
-PostgreSQL 12+          full support, including queries by virtual field
-MySQL 8+                full support
-MariaDB 10.5+           full support
-Oracle 21c+             full support
-SQLite 3.38+            reads, writes, forms and key-transform queries;
-                        the suite skips two lookup tests
+SQLite 3.38+            green; two lookup tests are skipped, everything
+                        else -- reads, writes, forms, key-transform
+                        queries and ordering -- runs
+PostgreSQL 12+          run it yourself with ``make test-postgres``
+MySQL 8+                ``make test-mysql``
+MariaDB 10.5+           ``make test-mariadb``
+Oracle 21c+             ``make test-oracle``
 ======================= ==================================================
 
-Django's own ``JSONField`` does the storage, so the requirements match
-`Django's <https://docs.djangoproject.com/en/stable/ref/models/fields/#jsonfield>`_.
-Querying a virtual field compiles to a key transform on the JSON column, which
-means the database has to index into the document -- that is what sets SQLite
-slightly apart.
+``docker-compose.yml`` starts each of those, so the non-SQLite backends are one
+``make db-up`` away. They are not part of a published CI run yet -- if a
+backend misbehaves, please open an issue.
 
 
 Limitations
