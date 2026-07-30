@@ -23,6 +23,13 @@ generate a migration per idea, and models that would otherwise need multi-table
 inheritance. When a field settles down, rename it to a real column and drop the
 ``jsonstore.`` prefix -- the rest of your code keeps working.
 
+**Documentation:** https://docs.viewflow.io/orm/json_storage.html
+
+The full reference lives on the Viewflow documentation site. `django-viewflow
+<https://github.com/viewflow/viewflow>`_ depends on this package and re-exports
+it as ``viewflow.jsonstore``, so ``from viewflow import jsonstore`` and
+``import jsonstore`` give you the same classes. What follows is a tour.
+
 *Replacing relational structures with JSON documents is an architecture
 decision. Foreign keys stored in a document have no database constraint, and
 neither do unique or many-to-many relations. Read the Limitations section
@@ -279,10 +286,11 @@ through the raw JSON key:
 
     Product.objects.filter(data__price__amount=100)
 
-`django-viewflow <https://github.com/viewflow/viewflow>`_ builds on these two
-fields to edit an embedded document as a nested form and a list of them as
-inlines, through ``EmbeddedModelForm`` / ``EmbeddedFormField`` /
-``EmbeddedFormSetField``.
+django-viewflow builds on these two fields to edit an embedded document as a
+nested form and a list of them as inlines, through ``EmbeddedModelForm`` /
+``EmbeddedFormField`` / ``EmbeddedFormSetField``. See
+`Editing embedded documents as forms
+<https://docs.viewflow.io/orm/json_storage.html>`_.
 
 
 Polymorphic models
@@ -399,4 +407,5 @@ Linux already, this license should not bring anything new to your stack.
 Changelog
 =========
 
-See `CHANGELOG.rst <./CHANGELOG.rst>`_.
+See `CHANGELOG.rst <./CHANGELOG.rst>`_. Full documentation:
+https://docs.viewflow.io/orm/json_storage.html
