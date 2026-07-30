@@ -340,8 +340,18 @@ Affero General Public License v3.0
 <http://www.gnu.org/licenses/agpl-3.0.html>`_, with the additional permissions
 in `LICENSE_EXCEPTION <./LICENSE_EXCEPTION>`_.
 
+The exception permits you to use this package in a project that has a license
+which is not compatible with the AGPL. A proprietary project is included. Your
+own code keeps your own license, and you do not release its source. The
+condition is that you do not change the source code of this package.
+
+If you do change this package, the AGPL applies to your modified version of it.
+Then you must give the source code of the modified package to each user who
+asks for it, not more than 15 days after the request.
+
 The license scheme is the same as the license scheme of the GCC Runtime
-Library.
+Library. The text above is a summary. Read `LICENSE_EXCEPTION
+<./LICENSE_EXCEPTION>`_ for the conditions.
 
 
 Changelog
