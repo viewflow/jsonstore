@@ -38,8 +38,7 @@ New since 0.5.1:
   third-party JSONField shims and the ``queryset`` module are gone.
 
 Supports only Django versions still under upstream support -- 5.2 LTS, 6.0 and
-6.1 -- on Python 3.10+. Tested against PostgreSQL, MySQL, MariaDB, Oracle and
-SQLite; see ``docker-compose.yml``.
+6.1 -- on Python 3.10+.
 
 
 0.5.1 2023-01-16

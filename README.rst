@@ -326,27 +326,12 @@ document; nothing else in your code has to change.
 Supported databases
 ===================
 
+PostgreSQL 12+, MySQL 8+, MariaDB 10.5+, Oracle 21c+ and SQLite 3.38+.
+
 Django's own ``JSONField`` does the storage, so the requirements match
-`Django's <https://docs.djangoproject.com/en/stable/ref/models/fields/#jsonfield>`_:
-PostgreSQL, MySQL, MariaDB, Oracle and SQLite. Querying a virtual field
-compiles to a key transform on the JSON column, so the database has to be able
-to index into the document.
-
-======================= ==================================================
-Database                Test suite
-======================= ==================================================
-SQLite 3.38+            green; two lookup tests are skipped, everything
-                        else -- reads, writes, forms, key-transform
-                        queries and ordering -- runs
-PostgreSQL 12+          run it yourself with ``make test-postgres``
-MySQL 8+                ``make test-mysql``
-MariaDB 10.5+           ``make test-mariadb``
-Oracle 21c+             ``make test-oracle``
-======================= ==================================================
-
-``docker-compose.yml`` starts each of those, so the non-SQLite backends are one
-``make db-up`` away. They are not part of a published CI run yet -- if a
-backend misbehaves, please open an issue.
+`Django's <https://docs.djangoproject.com/en/stable/ref/models/fields/#jsonfield>`_.
+Querying a virtual field compiles to a key transform on the JSON column, so the
+database has to be able to index into the document.
 
 
 Limitations
@@ -365,35 +350,12 @@ Limitations
   beyond list order.
 
 
-Testing
-=======
+Contributing
+============
 
-The suite runs on SQLite with no setup:
-
-.. code:: bash
-
-    $ pip install -e . dj-database-url
-    $ make test
-
-Testing against the other backends uses the containers in
-``docker-compose.yml``:
-
-.. code:: bash
-
-    $ make db-up                       # postgres, mysql, mariadb
-    $ make test-postgres
-    $ make test-mysql
-    $ make test-mariadb
-
-Oracle sits behind a compose profile because the image is large and slow to
-start:
-
-.. code:: bash
-
-    $ docker compose --profile oracle up -d --wait oracle
-    $ make test-oracle
-
-``make test-matrix`` runs every supported Django version on SQLite through tox.
+``make test`` runs the suite; ``make help`` lists the rest of the targets,
+including running it against each supported database and across the Django
+version matrix.
 
 
 License
