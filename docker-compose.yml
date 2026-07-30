@@ -1,0 +1,72 @@
+# Databases for running the test suite against a real backend.
+#
+#   docker compose up -d postgres mysql mariadb
+#   make test-postgres test-mysql test-mariadb
+#
+# Oracle is behind a profile because the image is large and slow to start:
+#
+#   docker compose --profile oracle up -d oracle
+#   make test-oracle
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: jsonstore
+      POSTGRES_PASSWORD: jsonstore
+      POSTGRES_DB: jsonstore
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jsonstore"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mysql:
+    image: mysql:8.4
+    command: --default-authentication-plugin=caching_sha2_password
+    environment:
+      MYSQL_ROOT_PASSWORD: jsonstore
+      MYSQL_USER: jsonstore
+      MYSQL_PASSWORD: jsonstore
+      MYSQL_DATABASE: jsonstore
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-pjsonstore"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mariadb:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: jsonstore
+      MARIADB_USER: jsonstore
+      MARIADB_PASSWORD: jsonstore
+      MARIADB_DATABASE: jsonstore
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  oracle:
+    profiles: ["oracle"]
+    # Oracle Database 23ai Free -- multi-arch, includes linux/arm64.
+    image: gvenzl/oracle-free:23-slim-faststart
+    environment:
+      ORACLE_PASSWORD: jsonstore
+      ORACLE_DATABASE: jsonstore
+      APP_USER: jsonstore
+      APP_USER_PASSWORD: jsonstore
+    ports:
+      - "1521:1521"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 10s
+      retries: 60

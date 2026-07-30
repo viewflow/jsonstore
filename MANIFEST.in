@@ -2,3 +2,9 @@ include LICENSE
 include LICENSE_EXCEPTION
 include MANIFEST.in
 include README.rst
+include CHANGELOG.rst
+exclude docker-compose.yml
+exclude Makefile
+exclude manage.py
+exclude tox.ini
+prune tests

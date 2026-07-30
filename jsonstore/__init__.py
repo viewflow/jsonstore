@@ -1,21 +1,79 @@
+# Copyright (c) 2017-2026, Mikhail Podgurskiy
+# All Rights Reserved.
+
+# This work is licensed under AGPL defined in file 'LICENSE' with the
+# additional permissions of 'LICENSE_EXCEPTION', both part of this source
+# code package.
+
 from .fields import (
+    BigIntegerField,
+    BinaryField,
+    BooleanField,
+    CharField,
+    DateField,
+    DateTimeField,
+    DecimalField,
+    DurationField,
+    EmailField,
+    EmbeddedField,
+    EmbeddedList,
+    EmbeddedListField,
+    EmbeddedModel,
+    FilePathField,
+    FloatField,
+    ForeignKey,
+    GenericIPAddressField,
+    IPAddressField,
+    IntegerField,
     JSONField,
-    BooleanField, CharField, DateField, DateTimeField,
-    DecimalField, EmailField, FloatField,
-    IntegerField, IPAddressField, GenericIPAddressField,
-    NullBooleanField, TextField, TimeField, URLField
+    JSONFieldMixin,
+    ManyToManyField,
+    NullBooleanField,
+    OneToOneField,
+    PositiveBigIntegerField,
+    PositiveIntegerField,
+    PositiveSmallIntegerField,
+    SlugField,
+    SmallIntegerField,
+    TextField,
+    TimeField,
+    URLField,
+    UUIDField,
 )
 
 
 __all__ = (
-    'JSONField',
-    'BooleanField', 'CharField', 'DateField', 'DateTimeField',
-    'DecimalField', 'EmailField', 'FloatField',
-    'IntegerField', 'IPAddressField', 'GenericIPAddressField',
-    'NullBooleanField', 'TextField', 'TimeField', 'URLField'
+    "BigIntegerField",
+    "BinaryField",
+    "BooleanField",
+    "CharField",
+    "DateField",
+    "DateTimeField",
+    "DecimalField",
+    "DurationField",
+    "EmailField",
+    "EmbeddedField",
+    "EmbeddedList",
+    "EmbeddedListField",
+    "EmbeddedModel",
+    "FilePathField",
+    "FloatField",
+    "ForeignKey",
+    "GenericIPAddressField",
+    "IPAddressField",
+    "IntegerField",
+    "JSONField",
+    "JSONFieldMixin",
+    "ManyToManyField",
+    "NullBooleanField",
+    "OneToOneField",
+    "PositiveBigIntegerField",
+    "PositiveIntegerField",
+    "PositiveSmallIntegerField",
+    "SlugField",
+    "SmallIntegerField",
+    "TextField",
+    "TimeField",
+    "URLField",
+    "UUIDField",
 )
-
-
-import warnings
-
-warnings.warn("The package was merged into django-viewflow. Please consider to switch to django-viewflow>=2.0.0b1")

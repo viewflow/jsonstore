@@ -1,11 +1,11 @@
-import jsonstore
 from datetime import date
 from django.db import models
 from django.test import TestCase
+import jsonstore
 
 
 class DateFieldModel(models.Model):
-    data = jsonstore.JSONField()
+    data = models.JSONField()
     date_field = jsonstore.DateField(blank=True, null=False)
 
 

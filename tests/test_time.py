@@ -1,12 +1,11 @@
-import jsonstore
-
 from datetime import time
 from django.db import models
 from django.test import TestCase
+import jsonstore
 
 
 class TimeFieldModel(models.Model):
-    data = jsonstore.JSONField()
+    data = models.JSONField()
     time_field = jsonstore.TimeField(blank=True, null=False)
 
 

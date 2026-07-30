@@ -2,6 +2,46 @@
 Changelog
 =========
 
+26.7.0
+------
+
+The package is maintained again, and versioning switches to CalVer
+(``YY.MM.MICRO``). Everything that grew inside ``django-viewflow`` while
+``django-jsonstore`` was deprecated has moved back here, and
+``django-viewflow`` now depends on this package -- ``from viewflow import
+jsonstore`` keeps working and resolves to the same classes.
+
+New since 0.5.1:
+
+- Relations stored in the document: ``ForeignKey``, ``OneToOneField`` and
+  ``ManyToManyField``. Related objects load lazily and are cached, any primary
+  key type works (integer or ``UUIDField``), lazy ``"app.Model"`` targets
+  resolve, and ``formfield()`` gives a ``ModelChoiceField`` /
+  ``ModelMultipleChoiceField`` so they work in ModelForms and the admin.
+  ``ManyToManyField`` exposes ``all``/``add``/``remove``/``set``/``clear``/
+  ``count`` and persists a form selection.
+- Embedded documents: ``EmbeddedModel`` declares a schema-only virtual model,
+  ``EmbeddedField`` stores one as a nested document and ``EmbeddedListField``
+  stores a list of them. Both bind to the stored sub-document, so in-place
+  edits persist on ``save()``.
+- ``json_key`` places a field under a custom key or a nested path
+  (``json_key=("address", "city")``), used consistently for reads, writes,
+  filtering and ordering. ``json_field_name`` spreads a model's virtual fields
+  across several JSON columns.
+- ``order_by()`` on a virtual field now sorts by the extracted value instead of
+  the JSON blob's text representation.
+- New field types: ``BigIntegerField``, ``SmallIntegerField``,
+  ``PositiveIntegerField``, ``PositiveSmallIntegerField``,
+  ``PositiveBigIntegerField``, ``SlugField``, ``FilePathField``,
+  ``BinaryField`` (base64), ``DurationField``, ``UUIDField`` and ``JSONField``.
+- Django's built-in ``models.JSONField`` is the only storage backend. The
+  third-party JSONField shims and the ``queryset`` module are gone.
+
+Supports only Django versions still under upstream support -- 5.2 LTS, 6.0 and
+6.1 -- on Python 3.10+. Tested against PostgreSQL, MySQL, MariaDB, Oracle and
+SQLite; see ``docker-compose.yml``.
+
+
 0.5.1 2023-01-16
 ----------------
 

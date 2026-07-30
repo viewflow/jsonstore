@@ -1,136 +1,71 @@
 import os
+
 import django
-import dj_database_url
 
+SECRET_KEY = "jsonstore-test-key-not-a-secret"
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1yj0rz&=bm8ihml!00o4nbi%eddugle)w9hi2*+tn^7*980wa8'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
-
-# Application definition
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
-    'tests.apps.TestsConfig',
+    "django.contrib.contenttypes",
+    "django.contrib.auth",
+    "tests.apps.TestsConfig",
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'tests.urls'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
             ],
         },
     },
 ]
 
-# WSGI_APPLICATION = 'tests.wsgi.application'
+# Point DATABASE_URL at postgres/mysql/oracle to exercise the queries that need
+# first-class JSONField support; sqlite covers the model and form API.
+# `docker compose up -d` starts all of them -- see docker-compose.yml.
+if os.environ.get("DATABASE_URL"):
+    import dj_database_url
 
-# Auth
+    DATABASES = {"default": dj_database_url.config()}
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'guardian.backends.ObjectPermissionBackend'
-)
-
-# Database
-# https://docs.djangoproject.com/en/dev/ref/settings/#databases
-
-DATABASES = {
-    'default': dj_database_url.config() or {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'dj{}{}.sqlite3'.format(*django.VERSION[:2])),
+    if "oracle" in DATABASES["default"]["ENGINE"]:
+        # Oracle's test runner creates a dedicated user and tablespace rather
+        # than a database, and needs to be told which ones to use.
+        DATABASES["default"]["TEST"] = {
+            "USER": "test_jsonstore",
+            "PASSWORD": "jsonstore",
+            "TBLSPACE": "test_jsonstore",
+            "TBLSPACE_TMP": "test_jsonstore_temp",
+        }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(
+                BASE_DIR, "..", "dj{}{}.sqlite3".format(*django.VERSION[:2])
+            ),
+        }
     }
-}
 
-MIGRATION_MODULES = {
-    'admin': None,
-    'auth': None,
-    'contenttypes': None,
-    'sessions': None,
-    'messages': None,
-    'staticfiles': None,
-    'tests': None,
-}
+# The test models are declared inside the test modules and have no migrations.
+MIGRATION_MODULES = {"tests": None}
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/dev/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 USE_TZ = True
 
+TIME_ZONE = "UTC"
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/dev/howto/static-files/
+LANGUAGE_CODE = "en-us"
 
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
-MEDIA_ROOT = os.path.join(BASE_DIR, '..', '.media')
-
-MEDIA_URL = '/media/'
-
-# Logging
-# https://docs.djangoproject.com/en/2.0/topics/logging/
-
-LOGGING = {
-    'version': 1,
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        }
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-        }
-    },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-        }
-    }
-}
-
-# Fixtures
-# https://docs.djangoproject.com/en/2.0/howto/initial-data/
-
-FIXTURE_DIRS = (
-    # os.path.join(BASE_DIR, 'fixtures'),
-)
+USE_I18N = True

@@ -1,10 +1,10 @@
-import jsonstore
 from django.db import models
 from django.test import TestCase
+import jsonstore
 
 
 class NullBooleanFieldModel(models.Model):
-    data = jsonstore.JSONField()
+    data = models.JSONField()
     nullboolean_field = jsonstore.NullBooleanField()
 
 

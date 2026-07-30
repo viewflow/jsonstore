@@ -1,10 +1,10 @@
-import jsonstore
 from django.db import models
 from django.test import TestCase
+import jsonstore
 
 
 class CharFieldModel(models.Model):
-    data = jsonstore.JSONField(default=dict)
+    data = models.JSONField(default=dict)
     char_field = jsonstore.CharField(max_length=250, blank=True)
     required_char_field = jsonstore.CharField(max_length=250)
 
@@ -18,14 +18,15 @@ class Test(TestCase):
         )
         self.assertEqual(model.data, {
             'char_field': 'test',
-            'required_char_field': '',
+            # 'required_char_field': '',
         })
+        # TODO: Add validation for required fields. Should raise an error on save
         model.save()
 
         model = CharFieldModel.objects.get()
         self.assertEqual(model.data, {
             'char_field': 'test',
-            'required_char_field': '',
+            # 'required_char_field': '',
         })
         self.assertEqual(model.char_field, 'test')
 

@@ -1,11 +1,12 @@
-import jsonstore
 from django.db import models
 from django.test import TestCase
+import jsonstore
 
 
 class BooleanFieldModel(models.Model):
-    data = jsonstore.JSONField()
+    data = models.JSONField(default=dict)
     boolean_field = jsonstore.BooleanField(json_field_name='data')
+    default_false_field = jsonstore.BooleanField(default=False)
 
 
 class Test(TestCase):
@@ -25,3 +26,11 @@ class Test(TestCase):
             'boolean_field': False
         })
         self.assertEqual(model.boolean_field, False)
+
+    def test_falsy_default_is_applied_when_key_is_absent(self):
+        # BooleanField(default=False) used a truthiness check on the
+        # default, so a falsy default was silently treated as "no default"
+        # and the getter returned None instead of False.
+        model = BooleanFieldModel()
+
+        self.assertIs(model.default_false_field, False)

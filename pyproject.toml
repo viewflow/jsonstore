@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# Metadata lives in setup.py. Build and publish with:
+#   python -m build
+#   twine check dist/*
+#   twine upload dist/*
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
