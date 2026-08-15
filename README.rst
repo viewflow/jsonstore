@@ -2,12 +2,16 @@
 Django JSONStore
 ================
 
-Django JSONStore keeps model field values in one JSON column.
+Store flexible model data in JSON without giving up Django fields.
 
-You declare typed fields on the model as usual. Each field reads and writes a
-key inside a single ``JSONField``. The fields are virtual. They have no column
-of their own, and they do not generate a migration. Forms, the admin, queries
-and ordering use them in the same way as concrete fields.
+Django JSONStore maps typed model fields to keys inside one
+``models.JSONField``. The fields work on model instances, in ModelForms and the
+admin. They also support filters, ordering and projections. They do not create
+database columns or migrations.
+
+Use it when records need different attributes or those attributes change
+often. Your code keeps Django field conversion, validation and form widgets.
+You do not have to handle an untyped dictionary.
 
 .. image:: https://img.shields.io/pypi/v/django-jsonstore.svg
     :target: https://pypi.python.org/pypi/django-jsonstore
@@ -37,11 +41,10 @@ Quick start
 
 .. code:: python
 
-    import jsonstore
     from decimal import Decimal
-    from django import forms
-    from django.contrib import admin
+
     from django.db import models
+    import jsonstore
 
     class Employee(models.Model):
         data = models.JSONField(default=dict)
@@ -54,10 +57,41 @@ Quick start
     employee.data
     # {"full_name": "Ann Lee", "salary": "100.00"}
 
-Use the virtual fields in ModelForms, in the admin, and in ``values()``,
-``values_list()``, ``filter()`` and ``order_by()``.
+The values live in ``data``, but application code uses them as fields.
 
 .. code:: python
+
+    employee.full_name
+    # "Ann Lee"
+
+    Employee.objects.filter(full_name="Ann Lee").order_by("hire_date")
+    Employee.objects.values_list("full_name", flat=True)
+
+
+When to use it
+==============
+
+JSONStore is a good fit when:
+
+* a model has many optional attributes;
+* different records need different sets of attributes;
+* attributes change more often than the database schema;
+* ModelForms and the admin still need typed Django fields;
+* a field may move to a regular database column later.
+
+Use a regular model field if you need a database constraint, index or relation
+join. See `Limitations`_ for the trade-offs.
+
+
+Forms and admin
+===============
+
+List virtual fields in ModelForms and ``ModelAdmin`` classes.
+
+.. code:: python
+
+    from django import forms
+    from django.contrib import admin
 
     class EmployeeForm(forms.ModelForm):
         class Meta:
@@ -68,9 +102,6 @@ Use the virtual fields in ModelForms, in the admin, and in ``values()``,
     class EmployeeAdmin(admin.ModelAdmin):
         list_display = ["full_name", "hire_date"]
         fields = ["full_name", ("hire_date", "salary")]
-
-    Employee.objects.filter(full_name="Ann Lee").order_by("hire_date")
-    Employee.objects.values_list("full_name", flat=True)
 
 
 Field types
