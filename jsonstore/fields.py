@@ -17,7 +17,6 @@ sees them.
 import base64
 import collections.abc
 import copy
-import json
 import uuid
 from datetime import date, datetime, timedelta
 from decimal import Decimal
@@ -70,11 +69,15 @@ class JSONFieldDescriptor(object):
                 value = container.get(leaf, None)
                 if hasattr(self.field, "from_json"):
                     value = self.field.from_json(value)
+                else:
+                    value = self.field.to_python(value)
             elif self.field.default is not fields.NOT_PROVIDED:
                 if callable(self.field.default):
                     value = self.field.default()
                 else:
                     value = self.field.default
+                self.__set__(instance, value)
+                return self.__get__(instance, cls)
             else:
                 value = None
             return value
@@ -86,6 +89,9 @@ class JSONFieldDescriptor(object):
             assert isinstance(json_value, dict)
         else:
             json_value = {}
+
+        if value is not None and value != "":
+            value = self.field.to_python(value)
 
         if hasattr(self.field, "to_json"):
             value = self.field.to_json(value)
@@ -133,6 +139,17 @@ class ForeignObjectDescriptor(object):
             if hasattr(instance, self.cache_name):
                 delattr(instance, self.cache_name)
             return
+        related_model = self.field.remote_field.model
+        if not isinstance(value, related_model._meta.concrete_model):
+            raise ValueError(
+                'Cannot assign "%r": "%s.%s" must be a "%s" instance.'
+                % (
+                    value,
+                    instance._meta.object_name,
+                    self.field.name,
+                    related_model._meta.object_name,
+                )
+            )
         setattr(instance, self.field.attname, value.pk)
         setattr(instance, self.cache_name, value)
 
@@ -213,6 +230,11 @@ class JSONFieldMixin(object):
             if transform_class is None:
                 return super().get_col(alias, output_field)
             result = transform_class(result)
+        # Keep JSONField's backend conversion, then restore the virtual field's
+        # Python type after the key transform has extracted the stored value.
+        result.get_db_converters = lambda connection: (
+            json_field.get_db_converters(connection) + [self.convert_json_value]
+        )
         return result
 
     def formfield(self, **kwargs):
@@ -255,17 +277,9 @@ class JSONFieldMixin(object):
         return NestedTransformFactory()
 
     def convert_json_value(self, value, expression, connection):
-        if isinstance(value, str):
-            try:
-                data = json.loads(value)
-            except (ValueError, TypeError):
-                return value
-            for key in self.json_path:
-                if not isinstance(data, dict) or key not in data:
-                    return value
-                data = data[key]
-            return data
-        return value
+        if hasattr(self, "from_json"):
+            return self.from_json(value)
+        return self.to_python(value)
 
     def get_db_converters(self, connection):
         converters = super().get_db_converters(connection)
@@ -671,16 +685,22 @@ class EmbeddedFieldDescriptor(object):
             value = container.get(leaf)
             if hasattr(self.field, "from_json"):
                 value = self.field.from_json(value)
+            else:
+                value = self.field.to_python(value)
             return value
         if self.field.default is not fields.NOT_PROVIDED:
-            return (
+            value = (
                 self.field.default()
                 if callable(self.field.default)
                 else self.field.default
             )
+            self.__set__(instance, value)
+            return self.__get__(instance, cls)
         return None
 
     def __set__(self, instance, value):
+        if value is not None and value != "":
+            value = self.field.to_python(value)
         if hasattr(self.field, "to_json"):
             value = self.field.to_json(value)
         container, leaf = _json_resolve(

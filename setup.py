@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name="django-jsonstore",
-    version="26.7.0",
+    version="26.8.0",
     author="Mikhail Podgurskiy",
     author_email="kmmbvnr@gmail.com",
     description="Expose JSONField data as virtual django model fields.",

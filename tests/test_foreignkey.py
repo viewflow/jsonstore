@@ -71,6 +71,12 @@ class Test(TestCase):
         self.assertIsNone(book.author)
         self.assertIsNone(book.author_id)
 
+    def test_assigning_wrong_model_type_is_rejected(self):
+        publisher = Publisher(name="P")
+
+        with self.assertRaisesMessage(ValueError, 'must be a "Author" instance'):
+            Book(title="T", author=publisher)
+
     def test_assign_by_raw_id(self):
         author = Author.objects.create(name="Ann")
         book = Book(title="T")

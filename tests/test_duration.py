@@ -25,3 +25,11 @@ class Test(TestCase):
 
         self.assertIsNone(obj.dur)
         self.assertEqual(obj.data, {})
+
+    def test_values_list_returns_timedelta(self):
+        DurationFieldModel.objects.create(dur=timedelta(seconds=3))
+
+        value = DurationFieldModel.objects.values_list("dur", flat=True).get()
+
+        self.assertEqual(value, timedelta(seconds=3))
+        self.assertIsInstance(value, timedelta)

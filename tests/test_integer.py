@@ -36,6 +36,20 @@ class Test(TestCase):
         )
         self.assertEqual(model.integer_field, 5)
 
+    def test_string_assignment_is_coerced_to_integer(self):
+        model = IntegerFieldModel.objects.create(integer_field="7")
+
+        self.assertEqual(model.data["integer_field"], 7)
+        fresh = IntegerFieldModel.objects.get(pk=model.pk)
+        self.assertEqual(fresh.integer_field, 7)
+        self.assertIsInstance(fresh.integer_field, int)
+
+    def test_string_in_existing_document_is_coerced_on_read(self):
+        model = IntegerFieldModel(data={"integer_field": "7"})
+
+        self.assertEqual(model.integer_field, 7)
+        self.assertIsInstance(model.integer_field, int)
+
     def test_null_value(self):
         model = IntegerFieldModel()
         self.assertEqual(model.integer_field, None)

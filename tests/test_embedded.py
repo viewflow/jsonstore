@@ -21,6 +21,10 @@ class Meta(jsonstore.EmbeddedModel):
     label = jsonstore.CharField(max_length=20, json_key="lbl", null=True)
 
 
+class Generated(jsonstore.EmbeddedModel):
+    token = jsonstore.UUIDField(default=uuid.uuid4)
+
+
 class Line(jsonstore.EmbeddedModel):
     """An embedded model that itself embeds another (nested document)."""
 
@@ -61,6 +65,15 @@ class ConstructionTest(TestCase):
         product = Product(price=Money(amount=5))
 
         self.assertEqual(product.price.currency, "USD")
+
+    def test_callable_default_is_stable_and_materialized_on_access(self):
+        generated = Generated()
+
+        first = generated.token
+        second = generated.token
+
+        self.assertEqual(first, second)
+        self.assertEqual(generated.to_dict()["token"], str(first))
 
     def test_unknown_field_kwarg_raises(self):
         with self.assertRaises(TypeError):

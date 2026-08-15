@@ -2,6 +2,19 @@
 Changelog
 =========
 
+26.8.0
+------
+
+- Coerce virtual field values through Django's ``to_python()`` conversion on
+  reads and writes, including values already present in JSON documents.
+- Return the declared Python types from ``values()`` and ``values_list()`` for
+  typed fields such as dates, durations and UUIDs.
+- Evaluate callable defaults once and materialize them on first access for
+  model and embedded fields.
+- Reject ``ForeignKey`` assignments whose value is not an instance of the
+  related model.
+
+
 26.7.0
 ------
 

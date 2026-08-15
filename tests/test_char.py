@@ -34,3 +34,11 @@ class Test(TestCase):
         model = CharFieldModel()
         self.assertEqual(model.char_field, None)
         self.assertEqual(model.data, {})
+
+    def test_non_string_assignment_is_coerced_to_string(self):
+        model = CharFieldModel.objects.create(char_field=123)
+
+        self.assertEqual(model.data["char_field"], "123")
+        fresh = CharFieldModel.objects.get(pk=model.pk)
+        self.assertEqual(fresh.char_field, "123")
+        self.assertIsInstance(fresh.char_field, str)
