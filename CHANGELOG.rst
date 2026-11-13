@@ -2,6 +2,13 @@
 Changelog
 =========
 
+26.11.0
+-------
+
+- Fix infinite recursion when reading a missing model or embedded field whose
+  default is empty and whose blank value is omitted from the JSON document.
+
+
 26.8.0
 ------
 

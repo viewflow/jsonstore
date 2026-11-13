@@ -77,6 +77,12 @@ class JSONFieldDescriptor(object):
                 else:
                     value = self.field.default
                 self.__set__(instance, value)
+                container, leaf = _json_resolve(
+                    getattr(instance, self.field.json_field_name), self.field.json_path
+                )
+                # Blank defaults may deliberately leave the JSON key absent.
+                if not isinstance(container, dict) or leaf not in container:
+                    return value
                 return self.__get__(instance, cls)
             else:
                 value = None
@@ -695,6 +701,9 @@ class EmbeddedFieldDescriptor(object):
                 else self.field.default
             )
             self.__set__(instance, value)
+            container, leaf = _json_resolve(instance._store, self.field.json_path)
+            if not isinstance(container, dict) or leaf not in container:
+                return value
             return self.__get__(instance, cls)
         return None
 
